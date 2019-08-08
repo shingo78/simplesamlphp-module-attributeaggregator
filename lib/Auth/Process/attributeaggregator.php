@@ -96,7 +96,9 @@ class sspmod_attributeaggregator_Auth_Process_attributeaggregator extends Simple
 							SAML2_Const::NAMEID_UNSPECIFIED,
 							SAML2_Const::NAMEID_PERSISTENT,
 							SAML2_Const::NAMEID_TRANSIENT,
-							SAML2_Const::NAMEID_ENCRYPTED) as $format) {
+							SAML2_Const::NAMEID_ENCRYPTED,
+							"urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress",
+							"urn:oid:1.3.6.1.4.1.5923.1.1.1.6") as $format) {
 				$invalid = TRUE;
 				if ($config["nameIdFormat"] == $format) {
 					$this->nameIdFormat = $config["nameIdFormat"];
