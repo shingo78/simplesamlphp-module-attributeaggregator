@@ -86,7 +86,11 @@ if ($idpEntityId === NULL) {
 	throw new SimpleSAML_Error_Exception('Missing issuer in response.');
 }
 $assertions = $response->getAssertions();
-$attributes_from_aa = $assertions[0]->getAttributes();
+if (!empty($assertions)) {
+	$attributes_from_aa = $assertions[0]->getAttributes();
+} else {
+	$attributes_from_aa = array();
+}
 $expected_attributes = $state['attributeaggregator:attributes'];
 // get attributes from response, and put it in the state.
 foreach ($attributes_from_aa as $name=>$values){
