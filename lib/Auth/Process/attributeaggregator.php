@@ -350,13 +350,13 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
         if(array_key_exists('*',$requestedAttributes)) {
             unset($requestedAttributes['*']);
         }
-        foreach ($requestedAttributes as $attribute) {
+        foreach ($requestedAttributes as $attribute => $values) {
             /* Reasons for NOT including the acceptable values in the request:
              *   - the SP might not want to let the AA know which values it accepts,
              *   - we can't rely on that the AA sends the matching values anyway,
              *   - in the future we might support regexp in the values array.
              */
-            $requestedAttribute[$attribute] = array();
+            $requestedAttributes[$attribute] = array();
         }
         return $requestedAttributes;
     }
