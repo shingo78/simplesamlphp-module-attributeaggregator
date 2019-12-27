@@ -239,11 +239,13 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
                     $response->getStatus()['Code'].')');
             }
             // merge attributes
-            $assertion = $response->getAssertions()[0]; // TODO Can there be more than 1?
-            if (empty($assertion)) {
-                throw new RuntimeException('Got an empty SAML Response');
+            $assertions = $response->getAssertions();
+            if (!empty($assertions)) {
+                $attributes_from_aa = $assertions[0]->getAttributes();
+            } else {
+                $attributes_from_aa = array();
             }
-            $this->mergeAttributes($state, $assertion->getAttributes());
+            $this->mergeAttributes($state, $attributes_from_aa);
         
         } catch (Exception $e) {
             \SimpleSAML\Logger::info("Attribute query failed: ".$e->getMessage());
