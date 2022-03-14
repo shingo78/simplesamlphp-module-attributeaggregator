@@ -216,12 +216,9 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
             $issuer = new \SAML2\XML\saml\Issuer();
             $issuer->setValue($this->selfMetadata->getValue('entityID'));
             $query->setIssuer($issuer);
-            $nameid = \SAML2\XML\saml\NameID::fromArray (
-                array(
-                    'Value' => $state['Attributes'][$this->attributeId][0],
-                    'Format' => $this->nameIdFormat,
-                )
-            );
+            $nameid = new \SAML2\XML\saml\NameID();
+            $nameid->setValue($state['Attributes'][$this->attributeId][0]);
+            $nameid->setFormat($this->nameIdFormat);
             $query->setNameId($nameid);
             $query->setAttributeNameFormat($this->attributeNameFormat);
             $query->setAttributes($this->getRequestedAttributes()); // may be empty, then it's a noop
