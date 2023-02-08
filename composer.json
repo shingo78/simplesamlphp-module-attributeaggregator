@@ -4,14 +4,19 @@
     "type": "simplesamlphp-module",
     "require": {
         "simplesamlphp/composer-module-installer": "~1.1",
-        "simplesamlphp/saml2": ">=4.0, <4.2.8",
+        "simplesamlphp/saml2": ">=4.0, <4.2.8 || >=4.5.1, ^4.6",
         "ext-soap": "*"
     },
     "require-dev": {
         "simplesamlphp/simplesamlphp": ">=1.14",
-        "phpunit/phpunit": "~5.7"
+        "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5"
     },
     "autoload-dev": {
       "files": ["tests/_autoload_modules.php"]
+    },
+    "config": {
+        "allow-plugins": {
+            "simplesamlphp/composer-module-installer": true
+        }
     }
 }
