@@ -9,6 +9,8 @@
  * @version $Id$
  */
 
+declare(strict_types=1);
+
 namespace SimpleSAML\Module\attributeaggregator\Auth\Process;
 
 class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
