@@ -89,7 +89,7 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
      * @param array $config   Configuration information
      * @param mixed $reserved For future use
      */
-    public function __construct($config, $reserved)
+    public function __construct(array &$config, $reserved)
     {
         assert('is_array($config)');
         parent::__construct($config, $reserved);
@@ -179,7 +179,7 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
      *
      * @param array &$state The state of the response.
      */
-    public function process(&$state)
+    public function process(array &$state): void
     {
         assert('is_array($state)');
 
