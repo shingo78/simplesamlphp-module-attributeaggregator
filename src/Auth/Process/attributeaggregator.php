@@ -224,7 +224,7 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
             $query->setNameId($nameid);
             $query->setAttributeNameFormat($this->attributeNameFormat);
             $query->setAttributes($this->getRequestedAttributes()); // may be empty, then it's a noop
-            $randomUtils = \SimpleSAML\Utils\Random();
+            $randomUtils = new \SimpleSAML\Utils\Random();
             $query->setID($randomUtils->generateID());
             // TODO: should this call be made optional?
             \SimpleSAML\Module\saml\Message::addSign($this->selfMetadata,$this->aaMetadata,$query);
