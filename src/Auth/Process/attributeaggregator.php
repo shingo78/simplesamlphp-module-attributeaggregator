@@ -9,6 +9,8 @@
  * @version $Id$
  */
 
+declare(strict_types=1);
+
 namespace SimpleSAML\Module\attributeaggregator\Auth\Process;
 
 class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
@@ -36,7 +38,7 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
     private $required = FALSE;
 
     /**
-     * 
+     *
      * nameIdFormat, the format of the attributeId. Default is "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent";
      * @var unknown_type
      */
@@ -87,7 +89,7 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
      * @param array $config   Configuration information
      * @param mixed $reserved For future use
      */
-    public function __construct($config, $reserved)
+    public function __construct(array &$config, $reserved)
     {
         assert('is_array($config)');
         parent::__construct($config, $reserved);
@@ -102,7 +104,7 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
         if (!empty($config["attributeId"])){
             $this->attributeId = $config["attributeId"];
         }
-        
+
         if (!empty($config["required"])){
             $this->required = $config["required"];
         }
@@ -122,7 +124,7 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
                 if (array_key_exists("values", $attribute)) {
                     if (! is_array($attribute["values"])) {
                         throw new \SimpleSAML\Error\Exception("attributeaggregator: Invalid format of attributes array in the configuration");
-                    }    
+                    }
                 }
                 if (array_key_exists('multiSource', $attribute)){
                     if(! preg_match('/^(merge|keep|override)$/', $attribute['multiSource']))
@@ -147,7 +149,7 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
                     $metadata->getMetaData($this->entityId, 'attributeauthority-remote')
                 );
                 if ($this->aaMetadata->hasValue('AttributeService')) {
-                    foreach ($this->aaMetadata->getArray('AttributeService',array()) as $aa_endpoint) {
+                    foreach ($this->aaMetadata->getOptionalArray('AttributeService',array()) as $aa_endpoint) {
                         if ($aa_endpoint['Binding'] == \SAML2\Constants::BINDING_SOAP) {
                             $this->aaEndpoint = $aa_endpoint['Location'];
                             break;
@@ -177,7 +179,7 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
      *
      * @param array &$state The state of the response.
      */
-    public function process(&$state)
+    public function process(array &$state): void
     {
         assert('is_array($state)');
 
@@ -222,7 +224,8 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
             $query->setNameId($nameid);
             $query->setAttributeNameFormat($this->attributeNameFormat);
             $query->setAttributes($this->getRequestedAttributes()); // may be empty, then it's a noop
-            $query->setID(\SimpleSAML\Utils\Random::generateID());
+            $randomUtils = new \SimpleSAML\Utils\Random();
+            $query->setID($randomUtils->generateID());
             // TODO: should this call be made optional?
             \SimpleSAML\Module\saml\Message::addSign($this->selfMetadata,$this->aaMetadata,$query);
 
@@ -245,7 +248,7 @@ class attributeaggregator extends \SimpleSAML\Auth\ProcessingFilter
                 $attributes_from_aa = array();
             }
             $this->mergeAttributes($state, $attributes_from_aa);
-        
+
         } catch (Exception $e) {
             \SimpleSAML\Logger::info("Attribute query failed: ".$e->getMessage());
             if ($this->required) {
